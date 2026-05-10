@@ -5,7 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Cupcake Ring</title>
+<link rel="manifest" href="manifest.json">
+
+<title>Cupcake Lights</title>
 
 <style>
 
@@ -162,19 +164,19 @@ color:#fff;
 
 <div class="card">
 
-<h1>Cupcake Ring</h1>
-<div class="subtitle">emotion synced light system</div>
+<h1>Cupcake Lights</h1>
+<div class="subtitle">Soft glow lighting system</div>
 
 <div class="cupcake">
 
-<svg id="heartSVG" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+<svg id="cakeSVG" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
 <path d="M160-80q-17 0-28.5-11.5T120-120v-200q0-33 23.5-56.5T200-400v-160q0-33 23.5-56.5T280-640h160v-58q-18-12-29-29t-11-41q0-15 6-29.5t18-26.5l56-56 56 56q12 12 18 26.5t6 29.5q0 24-11 41t-29 29v58h160q33 0 56.5 23.5T760-560v160q33 0 56.5 23.5T840-320v200q0 17-11.5 28.5T800-80H160Z"/>
 </svg>
 
 </div>
 
 <button onclick="sendMode('thinking'); setGlow('warm')">
-☀️ Staring at the Sun
+☀️ Staring Competition with the Sun
 </button>
 
 <button onclick="sendMode('goodnight'); setGlow('blue')">
@@ -243,9 +245,17 @@ const client = mqtt.connect(MQTT_BROKER, {
   reconnectPeriod: 2000
 });
 
+client.on("connect", () => {
+
+  console.log("MQTT connected");
+
+  client.subscribe(TOPIC_HISTORY);
+
+});
+
 /* ================= UI ================= */
 
-const svg = document.getElementById("heartSVG");
+const svg = document.getElementById("cakeSVG");
 const wrapper = document.getElementById("wrapper");
 const historyList = document.getElementById("historyList");
 
@@ -276,17 +286,25 @@ function sendMode(mode){
   client.publish(TOPIC_MODE, mode);
 }
 
-/* FIXED: NOW ALSO CONTROLS SVG + LED FLOW */
 function sendText(){
-  let t = document.getElementById("msg").value;
+
+  let t = document.getElementById("msg").value.trim();
+
+  // 🔥 STOP if empty
+  if(t === "") return;
 
   client.publish(TOPIC_TEXT, t);
+
   client.publish(TOPIC_MODE, "morse");
+
+  client.publish(TOPIC_HISTORY, t + "|Sending Morse...");
+
 
   setGlow("morsewhite");
 
-  // 🔥 HARD OVERRIDE: remove glow completely (your requirement)
   svg.style.filter = "none";
+
+  document.getElementById("msg").value = "";
 }
 
 /* 🔥 FIX: missing function that button calls */
@@ -374,6 +392,11 @@ if(diff > 60 && page === 0) openHistory();
 if(diff < -60 && page === 1) goBack();
 
 });
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("PWA Service Worker Registered"));
+}
 
 </script>
 
