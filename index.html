@@ -250,6 +250,7 @@ client.on("connect", () => {
   console.log("MQTT connected");
 
   client.subscribe(TOPIC_HISTORY);
+  client.subscribe(TOPIC_MODE);
 
 });
 
@@ -278,6 +279,25 @@ client.on("message", (topic, message) => {
 
     historyList.innerHTML = html + historyList.innerHTML;
   }
+  
+  /* ================= LIVE GLOW SYNC ================= */
+
+if(topic === TOPIC_MODE){
+
+  let mode = message.toString();
+
+  if(mode === "thinking") setGlow("warm");
+
+  if(mode === "goodnight") setGlow("blue");
+
+  if(mode === "home") setGlow("green");
+
+  if(mode === "miss") setGlow("pink");
+
+  if(mode === "morse") setGlow("morsewhite");
+
+  if(mode === "stop") setGlow("end");
+}
 });
 
 /* ================= SEND FUNCTIONS ================= */
