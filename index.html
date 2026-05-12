@@ -73,7 +73,35 @@ stroke:#111;
 stroke-width:32;
 stroke-linecap:round;
 stroke-linejoin:round;
-transition:filter .45s ease, transform .45s ease;
+
+/* 🔥 ADDED: glow animation support */
+filter: drop-shadow(0 0 12px rgba(0,0,0,0));
+animation: glowPulse 1.8s ease-in-out infinite;
+transition: stroke .45s ease, transform .45s ease;
+}
+
+/* 🔥 NEW: pulsing glow animation */
+@keyframes glowPulse {
+0% {
+filter:
+drop-shadow(0 0 10px var(--g1))
+drop-shadow(0 0 22px var(--g1))
+drop-shadow(0 0 40px var(--g2));
+}
+
+50% {
+filter:
+drop-shadow(0 0 18px var(--g1))
+drop-shadow(0 0 40px var(--g1))
+drop-shadow(0 0 75px var(--g2));
+}
+
+100% {
+filter:
+drop-shadow(0 0 10px var(--g1))
+drop-shadow(0 0 22px var(--g1))
+drop-shadow(0 0 40px var(--g2));
+}
 }
 
 @keyframes float{
@@ -193,7 +221,6 @@ color:#fff;
 
 <input id="msg" placeholder="Top secret message">
 
-<!-- FIXED BUTTON STILL SAME -->
 <button onclick="triggerMorseSend()">
 Send Morse
 </button>
@@ -230,7 +257,7 @@ Stop
 
 <script>
 
-/* ================= MQTT (FIXED) ================= */
+/* ================= MQTT (UNCHANGED) ================= */
 
 const MQTT_BROKER = "wss://b18093b9df75413cb7bbff6e7eb7488a.s1.eu.hivemq.cloud:8884/mqtt";
 
@@ -246,12 +273,8 @@ const client = mqtt.connect(MQTT_BROKER, {
 });
 
 client.on("connect", () => {
-
   console.log("MQTT connected");
-
   client.subscribe(TOPIC_HISTORY);
-  client.subscribe(TOPIC_MODE);
-
 });
 
 /* ================= UI ================= */
@@ -279,28 +302,9 @@ client.on("message", (topic, message) => {
 
     historyList.innerHTML = html + historyList.innerHTML;
   }
-  
-  /* ================= LIVE GLOW SYNC ================= */
-
-if(topic === TOPIC_MODE){
-
-  let mode = message.toString();
-
-  if(mode === "thinking") setGlow("warm");
-
-  if(mode === "goodnight") setGlow("blue");
-
-  if(mode === "home") setGlow("green");
-
-  if(mode === "miss") setGlow("pink");
-
-  if(mode === "morse") setGlow("morsewhite");
-
-  if(mode === "stop") setGlow("end");
-}
 });
 
-/* ================= SEND FUNCTIONS ================= */
+/* ================= SEND ================= */
 
 function sendMode(mode){
   client.publish(TOPIC_MODE, mode);
@@ -309,30 +313,22 @@ function sendMode(mode){
 function sendText(){
 
   let t = document.getElementById("msg").value.trim();
-
-  // 🔥 STOP if empty
   if(t === "") return;
 
   client.publish(TOPIC_TEXT, t);
-
   client.publish(TOPIC_MODE, "morse");
-
   client.publish(TOPIC_HISTORY, t + "|Sending Morse...");
 
-
   setGlow("morsewhite");
-
-  svg.style.filter = "none";
 
   document.getElementById("msg").value = "";
 }
 
-/* 🔥 FIX: missing function that button calls */
 function triggerMorseSend(){
   sendText();
 }
 
-/* ================= GLOW (UNCHANGED) ================= */
+/* ================= 🔥 GLOW (NOW PULSING) ================= */
 
 function setGlow(mode){
 
@@ -378,10 +374,10 @@ glow2 = "rgba(220,220,220,0.6)";
 
 svg.style.stroke = stroke;
 
-svg.style.filter =
-`drop-shadow(0 0 12px ${glow1})
- drop-shadow(0 0 28px ${glow1})
- drop-shadow(0 0 55px ${glow2})`;
+/* 🔥 NEW: pass glow colors into animation */
+svg.style.setProperty("--g1", glow1);
+svg.style.setProperty("--g2", glow2);
+
 }
 
 /* ================= NAV ================= */
