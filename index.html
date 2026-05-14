@@ -11,17 +11,30 @@
 
 <style>
 
-/* ================= ORIGINAL STYLING (UNCHANGED) ================= */
-
 body{
 margin:0;
-overflow-x:hidden;
-overflow-y:auto;
--webkit-overflow-scrolling: touch;
 height:100vh;
+overflow:hidden;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 background:#fff;
 color:#111;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+h1 {
+  padding: 0;
+  font-size:40px;
+  line-height: .4;
+  font-weight: 400;
+}
+
+:root {
+  --glow1: rgba(0,0,0,0.2);
+  --glow2: rgba(0,0,0,0.1);
 }
 
 .wrapper{
@@ -31,55 +44,60 @@ display:flex;
 transition:transform .5s cubic-bezier(.22,.9,.24,1);
 }
 
-.page{
-width:100vw;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
+.page {
+  align-items: flex-start;
+  padding-top: 40px;
 }
 
-.card{
-width:340px;
-text-align:center;
-padding:24px;
+.page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
-h1{
-font-size:31px;
-font-weight:600;
-margin-bottom:6px;
+.card {
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+  padding: 24px;
+  box-sizing: border-box;
+   margin-top: 30px;
 }
 
-.subtitle{
-opacity:0.55;
-font-size:13px;
-margin-bottom:18px;
-}
+.subtitle{ opacity:0.6; font-size:13px; }
 
 .cupcake{
+margin:25px 0;
 display:flex;
 justify-content:center;
 align-items:center;
-margin-bottom:28px;
-animation:float 10s ease-in-out infinite;
 }
 
 .cupcake svg{
 width:170px;
 height:170px;
-fill:none;
 stroke:#111;
 stroke-width:32;
+fill:none;
 stroke-linecap:round;
 stroke-linejoin:round;
-transition:filter .45s ease, transform .45s ease;
+filter: drop-shadow(0 0 12px rgba(0,0,0,0.2));
+transition: filter .3s ease, stroke .3s ease;
 }
 
-@keyframes float{
-0%{transform:translateY(0px);}
-50%{transform:translateY(-10px);}
-100%{transform:translateY(0px);}
+@keyframes pulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--glow1)) drop-shadow(0 0 20px var(--glow2)); }
+  50% { transform: scale(1.02); filter: drop-shadow(0 0 18px var(--glow1)) drop-shadow(0 0 45px var(--glow2)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 10px var(--glow1)) drop-shadow(0 0 20px var(--glow2)); }
+}
+
+.svgPulse{
+animation:pulse 2.6s ease-in-out infinite;
 }
 
 button{
@@ -89,7 +107,6 @@ margin-top:10px;
 border:none;
 border-radius:16px;
 background:#f5f5f5;
-font-size:14px;
 font-weight:600;
 cursor:pointer;
 }
@@ -99,56 +116,56 @@ button:active{ transform:scale(.98); }
 input{
 width:90%;
 padding:14px;
-margin-top:16px;
+margin-top:14px;
 border-radius:14px;
 border:1px solid #ddd;
-font-size:14px;
 }
 
-.historyCard{
-width:340px;
-max-height:85vh;
-overflow-y:auto;
-text-align:center;
-padding:24px;
-}
-
-.item{
-padding:16px;
-margin-bottom:12px;
-background:#f5f5f5;
-border-radius:16px;
-text-align:left;
-}
-
-.english{
-font-weight:600;
-margin-bottom:6px;
-}
-
-.morse{
-font-family:monospace;
-opacity:0.7;
-word-break:break-word;
-}
-
-.backBtn{
-margin-top:20px;
-width:100%;
-padding:14px;
-border-radius:16px;
-border:none;
-background:#111;
-color:#fff;
-font-weight:600;
-}
-
-.stop{
+button.stop{
 background:#111;
 color:#fff;
 }
 
-::-webkit-scrollbar{ display:none; }
+button.back{
+background:#111;
+color:#fff;
+}
+
+button.colorBtn {
+  transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  will-change: transform;
+}
+
+/* ACTIVE PRESS FEEL */
+button.colorBtn:active {
+  transform: scale(0.97);
+}
+
+/* HOVER / TOUCH-LIKE GLOW ANIMATION */
+button.colorBtn:hover {
+  transform: scale(1.03);
+}
+
+/* INDIVIDUAL GLOW STATES */
+button.warmGlow:hover {
+  box-shadow: 0 0 18px rgba(255, 179, 71, 0.55),
+              0 0 40px rgba(255, 140, 0, 0.35);
+}
+
+button.blueGlow:hover {
+  box-shadow: 0 0 18px rgba(122, 187, 255, 0.55),
+              0 0 40px rgba(153, 175, 255, 0.35);
+}
+
+button.greenGlow:hover {
+  box-shadow: 0 0 18px rgba(109, 255, 176, 0.55),
+              0 0 40px rgba(0, 255, 140, 0.35);
+}
+
+button.pinkGlow:hover {
+  box-shadow: 0 0 18px rgba(255, 106, 223, 0.45),
+              0 0 40px rgba(255, 0, 180, 0.30);
+}
 
 </style>
 
@@ -158,70 +175,52 @@ color:#fff;
 
 <div id="wrapper" class="wrapper">
 
-<!-- ================= PAGE 1 ================= -->
-
+<!-- PAGE 1 -->
 <div class="page">
-
 <div class="card">
 
 <h1>Cupcake Lights</h1>
 <div class="subtitle">Soft glow lighting system</div>
 
 <div class="cupcake">
-
-<svg id="cakeSVG" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+<svg id="cakeSVG" viewBox="0 -960 960 960">
 <path d="M160-80q-17 0-28.5-11.5T120-120v-200q0-33 23.5-56.5T200-400v-160q0-33 23.5-56.5T280-640h160v-58q-18-12-29-29t-11-41q0-15 6-29.5t18-26.5l56-56 56 56q12 12 18 26.5t6 29.5q0 24-11 41t-29 29v58h160q33 0 56.5 23.5T760-560v160q33 0 56.5 23.5T840-320v200q0 17-11.5 28.5T800-80H160Z"/>
 </svg>
-
 </div>
 
-<button onclick="sendMode('thinking'); setGlow('warm')">
+<button class="colorBtn warmGlow" onclick="sendMode('thinking'); setGlow('warm')">
 ☀️ Staring Competition with the Sun
 </button>
 
-<button onclick="sendMode('goodnight'); setGlow('blue')">
+<button class="colorBtn blueGlow" onclick="sendMode('goodnight'); setGlow('blue')">
 🐑 Going to Count Sheep
 </button>
 
-<button onclick="sendMode('home'); setGlow('green')">
+<button class="colorBtn greenGlow" onclick="sendMode('home'); setGlow('green')">
 🦎 Enemy Alert !
 </button>
 
-<button onclick="sendMode('miss'); setGlow('pink')">
+<button class="colorBtn pinkGlow" onclick="sendMode('miss'); setGlow('pink')">
 💜 Illegal Amount of Missing
 </button>
 
 <input id="msg" placeholder="Top secret message">
 
-<!-- FIXED BUTTON STILL SAME -->
-<button onclick="triggerMorseSend()">
-Send Morse
-</button>
-
+<button onclick="sendMorse()">Send Morse</button>
 <button onclick="openHistory()">Morse History</button>
 
-<button class="stop" onclick="sendMode('stop'); setGlow('end')">
-Stop
-</button>
+<button class="stop" onclick="sendMode('stop'); setGlow('end')">Stop</button>
 
 </div>
 </div>
 
-<!-- ================= PAGE 2 ================= -->
-
+<!-- PAGE 2 -->
 <div class="page">
-
-<div class="historyCard">
-
-<h1>Morse History</h1>
-<div class="subtitle">← swipe back</div>
-
-<div id="historyList"></div>
-
-<button class="backBtn" onclick="goBack()">← Back</button>
-
+<div class="card">
+<h1>History</h1>
+<div id="history"></div>
+<button class="back" onclick="goBack()">Back</button>
 </div>
-
 </div>
 
 </div>
@@ -230,193 +229,149 @@ Stop
 
 <script>
 
-/* ================= MQTT (FIXED) ================= */
+/* ================= MQTT ================= */
 
-const MQTT_BROKER = "wss://b18093b9df75413cb7bbff6e7eb7488a.s1.eu.hivemq.cloud:8884/mqtt";
+const client = mqtt.connect("wss://b18093b9df75413cb7bbff6e7eb7488a.s1.eu.hivemq.cloud:8884/mqtt", {
+  username: "StevebDesigns",
+  password: "12345678Ax",
+  reconnectPeriod: 2000
+});
 
 const TOPIC_MODE = "cup/led/mode";
 const TOPIC_TEXT = "cup/led/text";
 const TOPIC_HISTORY = "cup/history";
 
-const client = mqtt.connect(MQTT_BROKER, {
-  username: "StevebDesigns",
-  password: "12345678Ax",
-  clean: true,
-  reconnectPeriod: 2000
-});
-
-client.on("connect", () => {
-
-  console.log("MQTT connected");
-
-  client.subscribe(TOPIC_HISTORY);
-  client.subscribe(TOPIC_MODE);
-
-});
-
 /* ================= UI ================= */
 
 const svg = document.getElementById("cakeSVG");
 const wrapper = document.getElementById("wrapper");
-const historyList = document.getElementById("historyList");
+const historyDiv = document.getElementById("history");
 
 let page = 0;
 
-/* ================= HISTORY ================= */
+/* ================= MQTT ================= */
 
-client.on("message", (topic, message) => {
-
-  if (topic === TOPIC_HISTORY) {
-
-    let msg = message.toString();
-    let parts = msg.split("|");
-
-    let html =
-    `<div class='item'>
-      <div class='english'>${parts[0]}</div>
-      <div class='morse'>${parts[1]}</div>
-    </div>`;
-
-    historyList.innerHTML = html + historyList.innerHTML;
-  }
-  
-  /* ================= LIVE GLOW SYNC ================= */
-
-if(topic === TOPIC_MODE){
-
-  let mode = message.toString();
-
-  if(mode === "thinking") setGlow("warm");
-
-  if(mode === "goodnight") setGlow("blue");
-
-  if(mode === "home") setGlow("green");
-
-  if(mode === "miss") setGlow("pink");
-
-  if(mode === "morse") setGlow("morsewhite");
-
-  if(mode === "stop") setGlow("end");
-}
+client.on("connect", () => {
+  console.log("MQTT connected");
+  client.subscribe(TOPIC_HISTORY);
 });
 
-/* ================= SEND FUNCTIONS ================= */
+client.on("message", (topic, msg) => {
+  if(topic !== TOPIC_HISTORY) return;
 
-function sendMode(mode){
-  client.publish(TOPIC_MODE, mode);
+  const [text, morse] = msg.toString().split("|");
+
+  historyDiv.innerHTML =
+  `<div style="padding:10px;margin:10px;background:#f5f5f5;border-radius:12px">
+    <b>${text}</b><br>${morse}
+  </div>` + historyDiv.innerHTML;
+});
+
+/* ================= MODE ================= */
+
+function sendMode(m){
+  client.publish(TOPIC_MODE, m);
 }
 
-function sendText(){
+/* ================= MORSE ================= */
 
-  let t = document.getElementById("msg").value.trim();
+function sendMorse(){
 
-  // 🔥 STOP if empty
-  if(t === "") return;
+  const t = document.getElementById("msg").value.trim();
+  if(!t) return;
 
   client.publish(TOPIC_TEXT, t);
-
   client.publish(TOPIC_MODE, "morse");
-
-  client.publish(TOPIC_HISTORY, t + "|Sending Morse...");
-
-
-  setGlow("morsewhite");
-
-  svg.style.filter = "none";
+  client.publish(TOPIC_HISTORY, t + "|sending...");
 
   document.getElementById("msg").value = "";
+
+  setGlow("white");
 }
 
-/* 🔥 FIX: missing function that button calls */
-function triggerMorseSend(){
-  sendText();
-}
-
-/* ================= GLOW (UNCHANGED) ================= */
+/* ================= GLOW SYSTEM ================= */
 
 function setGlow(mode){
 
-let stroke = "#111";
-let glow1 = "";
-let glow2 = "";
+  svg.classList.remove("svgPulse");
 
-if(mode === "warm"){
-stroke = "#fbca37";
-glow1 = "rgba(255,179,71,0.65)";
-glow2 = "rgba(255,140,0,0.6)";
-}
+  let glow1 = "rgba(0,0,0,0.2)";
+  let glow2 = "rgba(0,0,0,0.1)";
+  let stroke = "#111";
 
-if(mode === "blue"){
-stroke = "#80bbff";
-glow1 = "rgba(122,187,255,0.65)";
-glow2 = "rgba(153,175,255,0.6)";
-}
+  if(mode === "warm"){
+    stroke="#fbca37";
+    glow1="rgba(255,179,71,0.7)";
+    glow2="rgba(255,140,0,0.5)";
+    svg.classList.add("svgPulse");
+  }
 
-if(mode === "green"){
-stroke = "#6dffb0";
-glow1 = "rgba(109,255,176,0.65)";
-glow2 = "rgba(0,255,140,0.6)";
-}
+  if(mode === "blue"){
+    stroke="#80bbff";
+    glow1="rgba(122,187,255,0.7)";
+    glow2="rgba(153,175,255,0.5)";
+    svg.classList.add("svgPulse");
+  }
 
-if(mode === "pink"){
-stroke = "#ff99e9";
-glow1 = "rgba(255,106,223,0.45)";
-glow2 = "rgba(255,0,180,0.4)";
-}
+  if(mode === "green"){
+    stroke="#6dffb0";
+    glow1="rgba(109,255,176,0.7)";
+    glow2="rgba(0,255,140,0.5)";
+    svg.classList.add("svgPulse");
+  }
 
-if(mode === "morsewhite"){
-stroke = "#ffffff";
-glow1 = "rgba(255,255,255,0.9)";
-glow2 = "rgba(255,255,255,0.6)";
-}
+  if(mode === "pink"){
+    stroke="#ff99e9";
+    glow1="rgba(255,106,223,0.6)";
+    glow2="rgba(255,0,180,0.4)";
+    svg.classList.add("svgPulse");
+  }
 
-if(mode === "end"){
-stroke = "#111";
-glow1 = "rgba(255,255,255,0.65)";
-glow2 = "rgba(220,220,220,0.6)";
-}
+  if(mode === "white"){
+    stroke="#fff";
+  }
 
-svg.style.stroke = stroke;
+  if(mode === "end"){
+    stroke="#111";
+  }
 
-svg.style.filter =
-`drop-shadow(0 0 12px ${glow1})
- drop-shadow(0 0 28px ${glow1})
- drop-shadow(0 0 55px ${glow2})`;
+  document.documentElement.style.setProperty("--glow1", glow1);
+  document.documentElement.style.setProperty("--glow2", glow2);
+
+  svg.style.stroke = stroke;
+
+  if(!svg.classList.contains("svgPulse")){
+    svg.style.filter =
+    `drop-shadow(0 0 12px ${glow1})
+     drop-shadow(0 0 28px ${glow1})
+     drop-shadow(0 0 55px ${glow2})`;
+  }
 }
 
 /* ================= NAV ================= */
 
 function openHistory(){
-page = 1;
-wrapper.style.transform = "translateX(-100vw)";
+  page = 1;
+  wrapper.style.transform = "translateX(-100vw)";
 }
 
 function goBack(){
-page = 0;
-wrapper.style.transform = "translateX(0vw)";
+  page = 0;
+  wrapper.style.transform = "translateX(0vw)";
 }
 
 /* ================= SWIPE ================= */
 
 let startX = 0;
 
-document.addEventListener("touchstart", e => {
-startX = e.touches[0].clientX;
-});
+document.addEventListener("touchstart", e => startX = e.touches[0].clientX);
 
 document.addEventListener("touchend", e => {
+  let diff = startX - e.changedTouches[0].clientX;
 
-let diff = startX - e.changedTouches[0].clientX;
-
-if(diff > 60 && page === 0) openHistory();
-if(diff < -60 && page === 1) goBack();
-
+  if(diff > 60 && page === 0) openHistory();
+  if(diff < -60 && page === 1) goBack();
 });
-
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js")
-    .then(() => console.log("PWA Service Worker Registered"));
-}
 
 </script>
 
